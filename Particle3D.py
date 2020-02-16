@@ -6,7 +6,7 @@ in another time integration program and will make use of the functions provided 
 import numpy as np
 import csv
 
-class Particle3D(object):
+class P3D(object):
 
     def __init__(self, x, y, z, vx, vy, vz, mass, label):
         "Initialise a Particle3D instance"
@@ -64,7 +64,3 @@ class Particle3D(object):
     def separation(p1,p2):
         """Static method for determining the separation between two particles"""
         return (p1.position-p2.position)
-
-N=5
-particles=[Particle3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
-print(particles[1])

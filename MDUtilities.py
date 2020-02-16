@@ -4,12 +4,14 @@ CMod Project B: auxiliary MD methods
 
 import random
 import numpy as np
-from Particle3D import Particle3D
+from Particle3D import P3D
 
-
+N=5
 def particlecreator(N):
-    particles=[Particle3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
+    particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(1,N+1)]
+    print(particles[1])
     return particles
+particlecreator(N)
 
 
 def set_initial_positions(particles):
@@ -18,6 +20,7 @@ def set_initial_positions(particles):
 
     # Determine number of particles
     natoms = len(particles)
+    print(natoms)
 
     # Set box dimensions
     box_size = (natoms/rho)**(1./3.)
