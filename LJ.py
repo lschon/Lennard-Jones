@@ -26,7 +26,6 @@ def LJforce(rsep_red, r_red):
     """
     force=48*(1/r_red**(14)-1/(2*r_red**8))*rsep_red
 
-
     return force
 
 def LJpot(r_red):
@@ -140,3 +139,5 @@ def main():
 # Execute main method, but only when directly invoked
 if __name__ == "__main__":
     main()
+
+print("Hello Ewan")
