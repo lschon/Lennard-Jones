@@ -140,6 +140,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+<<<<<<< HEAD
 
 print("Hello Ewan")
 print("Hello Lucas")
@@ -147,3 +148,11 @@ print("Hello Ewan2")
 
 x = np.array([1,2,3])
 print(x)
+=======
+<<<<<<< HEAD
+print("Hello Ewan")
+print("Hello Lucas")
+=======
+print("Hello Ewan2")
+>>>>>>> b15cab614ec7dfcee4f37c872f0e53130856a2bc
+>>>>>>> 930a116cfd7ebb0f596afbcf8ae41edc2ef3ce80
