@@ -6,19 +6,6 @@ in another time integration program and will make use of the functions provided 
 import numpy as np
 import csv
 
-
-def NParticles():
-    particles=[]
-    N=5
-    for i in range(N):
-        particles.append([])
-        number=str(i)
-        label="Particle"+number
-        particles[i].extend([0, 0, 0, 0, 0, 0, 1, label])
-    return particles
-NParticles()
-
-
 class Particle3D(object):
 
     def __init__(self, x, y, z, vx, vy, vz, mass, label):
@@ -34,7 +21,7 @@ class Particle3D(object):
 
     def __str__(self):
         "Define output format."
-        return self.label + "Position: " + str(self.position) + "Velocity: "+ str(self.velocity) + "Mass: " + str(self.mass)
+        return self.label + " Position: " + str(self.position) + " Velocity: "+ str(self.velocity) + " Mass: " + str(self.mass)
 
     def KE(self):
         "Return kinetic energy as 1/2*mass*vel^2"
@@ -77,3 +64,7 @@ class Particle3D(object):
     def separation(p1,p2):
         """Static method for determining the separation between two particles"""
         return (p1.position-p2.position)
+
+N=5
+particles=[Particle3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
+print(particles[1])
