@@ -4,9 +4,13 @@ CMod Project B: auxiliary MD methods
 
 import random
 import numpy as np
-import Particle3D
+from Particle3D import Particle3D
 
-particles = Particle3D.NParticles() 
+
+def particlecreator(N):
+    particles=[Particle3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
+    return particles
+
 
 def set_initial_positions(particles):
 
@@ -56,7 +60,7 @@ def set_initial_positions(particles):
 
     # Return the box size as Numpy array
     return np.array([box_size, box_size, box_size])
-set_initial_positions(particles)
+
 
 def set_initial_velocities(temp, particles):
 
