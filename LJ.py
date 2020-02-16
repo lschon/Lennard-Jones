@@ -140,5 +140,10 @@ def main():
 if __name__ == "__main__":
     main()
 
+
 print("Hello Ewan")
 print("Hello Lucas")
+print("Hello Ewan2")
+
+x = np.array([1,2,3])
+print(x)
