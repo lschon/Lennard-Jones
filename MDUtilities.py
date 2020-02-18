@@ -57,12 +57,8 @@ def set_initial_positions():
     box=np.array([box_size, box_size, box_size])
     # Return the box size as Numpy array
     # NEED TO RETURN THE POSITIONS SOMEHOW TOO??
-    print(particles.position) # Doesnt work because list object has no attribute position...
-    # Makes me wonder if the way we are defining "particles" makes it just a list and not an object,
-    # like we would want it to be
     return box
 
-set_initial_positions()
 
 def set_initial_velocities():
     temp=290

@@ -27,22 +27,22 @@ box=MDUtilities.set_initial_positions()
 
 def pbc(box):
     # Finding the projected position within box of sides l
+    pbc_pos=[]
     for i in range(N):
-        particles_pos=particles[i].position
-        print(particles_pos)
-        pbc_pos=np.mod(particles_pos[i],box)
-    print("The image of x projected onto the periodic box with range 0 to l is ", pbc_pos)
+        pbc_pos[i].append=np.mod(particles[i].position,box)
+        print(pbc_pos[i])
     return pbc_pos
+    # Ideally, we would not actually make a pbc_pos list with the new update positions
+    # which result from pbc, but instead update the actual particle object positions,
+    # but I don't know how to do this quite yet... I think that's the way to go though
 pbc(box)
 
 """def mic(box):
     # INCOMPLETE, TRYING TO MAKE PBC WORK FIRST BEFORE THIS ONE.
-    # Finding the projected x within box centered on origin
-    particles_pos=[particles.position for i in range (N)]
+    # Finding the projected position within box centered on origin
     mic_pos=[]
     for i in range(len(particles)):
-        append.mic_pos[i]=np.mod(particles_pos[i]+box/2,box)-box/2
-    print("The image of x projected onto the periodic box centered at the origin with range -l/2 to l/2 is  ", pxo)
+        mic_pos[i].append=np.mod(particles_pos[i]+box/2,box)-box/2
     return mic_pos"""
 
 def LJforce(rsep_red, r_red):
