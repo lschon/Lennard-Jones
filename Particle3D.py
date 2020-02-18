@@ -61,6 +61,15 @@ class P3D(object):
         return Particle3D(x,y,z,vx,vy,vz,mass,label)
 
     @staticmethod
+    def parameterfilereader(parameterfile):
+        line=parameterfile.readline()
+        tokens=line.split(",")
+        e_k_b=float(tokens[0])
+        sigma=float(tokens[1])
+        m=float(tokens[2])
+        return e_k_b, sigma, m
+
+    @staticmethod
     def separation(p1,p2):
         """Static method for determining the separation between two particles"""
         return (p1.position-p2.position)

@@ -18,7 +18,32 @@ import sys
 import math
 import numpy as np
 import matplotlib.pyplot as pyplot
-from Particle3D import Particle3D
+from Particle3D import P3D
+import MDUtilities
+
+N=4
+particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
+box=MDUtilities.set_initial_positions()
+
+def pbc(box):
+    # Finding the projected position within box of sides l
+    for i in range(N):
+        particles_pos=particles[i].position
+        print(particles_pos)
+        pbc_pos=np.mod(particles_pos[i],box)
+    print("The image of x projected onto the periodic box with range 0 to l is ", pbc_pos)
+    return pbc_pos
+pbc(box)
+
+"""def mic(box):
+    # INCOMPLETE, TRYING TO MAKE PBC WORK FIRST BEFORE THIS ONE.
+    # Finding the projected x within box centered on origin
+    particles_pos=[particles.position for i in range (N)]
+    mic_pos=[]
+    for i in range(len(particles)):
+        append.mic_pos[i]=np.mod(particles_pos[i]+box/2,box)-box/2
+    print("The image of x projected onto the periodic box centered at the origin with range -l/2 to l/2 is  ", pxo)
+    return mic_pos"""
 
 def LJforce(rsep_red, r_red):
     """
@@ -49,14 +74,16 @@ def main():
 
     # Open file with parameters
     parameterfile=open("LJparameters.txt", "r")
-    list=Particle3D.parameterfilereader(parameterfile)
+    list=P3D.parameterfilereader(parameterfile)
     e_k_b=float(list[0])
     sigma=float(list[1])
     m=float(list[2])
     epsilon=e_k_b*(1.38064852*10**(-23))
 
     # Write out initial conditions
-    rsep=Particle3D.separation(p1,p2)
+    # Need to find separation between N particles including boundary conditions
+    # From this point onwards, we need to change a 2 particle system to an N particle system
+    rsep=P3D.separation(p1,p2)
     r = np.linalg.norm(rsep)
 
     # Define reduced units
@@ -102,7 +129,7 @@ def main():
         p2.leap_velocity(dt, -0.5*(force+force_new))
 
         # Re-define separation ater change in position
-        r_red = Particle3D.separation(p1,p2)
+        r_red = P3D.separation(p1,p2)
 
         # Re-define force value
         force = force_new

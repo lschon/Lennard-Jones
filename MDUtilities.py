@@ -6,21 +6,15 @@ import random
 import numpy as np
 from Particle3D import P3D
 
-N=5
-def particlecreator(N):
-    particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(1,N+1)]
-    print(particles[1])
-    return particles
-particlecreator(N)
+N=4 #Defining number of particles
+particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
 
-
-def set_initial_positions(particles):
+def set_initial_positions():
 
     rho=1.7848 #THIS SHOULD BE REDUCED DENSITY???
 
     # Determine number of particles
     natoms = len(particles)
-    print(natoms)
 
     # Set box dimensions
     box_size = (natoms/rho)**(1./3.)
@@ -58,15 +52,20 @@ def set_initial_positions(particles):
                     i_atom += 1
 
     # Some output
-    print("{0:d} atoms placed on a face-centered cubic lattice.\n".format(natoms))
-    print("Box dimensions: {0:f} {0:f} {0:f}\n".format(box_size))
-
+    print(N, "atoms placed on a face-centered cubic lattice.")
+    print("Box dimensions: ", box_size, box_size, box_size)
+    box=np.array([box_size, box_size, box_size])
     # Return the box size as Numpy array
-    return np.array([box_size, box_size, box_size])
+    # NEED TO RETURN THE POSITIONS SOMEHOW TOO??
+    print(particles.position) # Doesnt work because list object has no attribute position...
+    # Makes me wonder if the way we are defining "particles" makes it just a list and not an object,
+    # like we would want it to be
+    return box
 
+set_initial_positions()
 
-def set_initial_velocities(temp, particles):
-
+def set_initial_velocities():
+    temp=290
     # Determine number of particles
     natoms = len(particles)
 
@@ -91,6 +90,8 @@ def set_initial_velocities(temp, particles):
         zv0 += zvt
         vsq += xvt**2 + yvt**2 + zvt**2
 
+        print(xvt,yvt,zvt)
+
     # Centre-of-mass motion
     xv0 /= natoms
     yv0 /= natoms
@@ -98,7 +99,7 @@ def set_initial_velocities(temp, particles):
 
     # Boltzmann factor
     kB = (3*natoms*temp/vsq)**(1./2.)
-
+    print("kB is: ", kB)
     # Zero the probe accumulators
     xv0_tot = 0.0
     yv0_tot = 0.0
@@ -108,9 +109,13 @@ def set_initial_velocities(temp, particles):
     # Rescale all velocities
     for i in range(natoms):
         vtemp = particles[i].velocity
+        print("vtemp is: ", vtemp)
         xvt = kB*(vtemp[0] - xv0)
         yvt = kB*(vtemp[1] - yv0)
         zvt = kB*(vtemp[2] - zv0)
+    # Note to self: After this step, the component velocities of the particles add up to zero every time
+    # this does not make sense
+        print(xvt,yvt,zvt)
 
         particles[i].velocity = np.array([xvt, yvt, zvt])
 
@@ -120,5 +125,8 @@ def set_initial_velocities(temp, particles):
         v0sq += xvt**2 + yvt**2 + zvt**2
 
     # Output
-    print("Temperature = {0:f}\n".format(temp))
-    print("Centre-of-mass velocity = {0:f} {1:f} {2:f}\n".format(xv0_tot/natoms, yv0_tot/natoms, zv0_tot/natoms))
+    print("Temperature = ", temp, "Kelvin")
+    print("Centre-of-mass velocity is: ", xv0_tot/natoms, yv0_tot/natoms, zv0_tot/natoms )
+
+
+# set_initial_velocities()
