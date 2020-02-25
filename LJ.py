@@ -40,18 +40,17 @@ def initialiser():
     box, particles= MDUtilities.set_initial_positions(N, rho, particles)
     MDUtilities.set_initial_velocities(temp, particles)
 
-    return particles, box
-
+    return particles, box, N
 
  # No need for pbc, only mic
-def pbc(N):
-    particles, box, N = initialiser(N, temp, rho)
+def pbc():
+    particles, box, N = initialiser()
     for i in range(N):
         particles[i].position=np.mod(particles[i].position,box)
     return particles # May not even need this return particles according to Miguel
 
-def mic(N):
-    particles, box, N = initialiser(N, temp, rho)
+def mic():
+    particles, box, N = initialiser()
     for i in range(N):
         particles[i].position=np.mod(particles[i].position+box/2,box)-box/2
     print(particles.position)
