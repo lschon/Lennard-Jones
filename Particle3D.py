@@ -21,7 +21,7 @@ class P3D(object):
 
     def __str__(self):
         "Define output format."
-        return self.label + " Position: " + str(self.position) + " Velocity: "+ str(self.velocity) + " Mass: " + str(self.mass)
+        return str(self.label) + " " + str(self.position[0]) + " " +str(self.position[1]) + " " +str(self.position[2])
 
     def KE(self):
         "Return kinetic energy as 1/2*mass*vel^2"
