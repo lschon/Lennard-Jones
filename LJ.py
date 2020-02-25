@@ -21,7 +21,6 @@ import matplotlib.pyplot as pyplot
 from Particle3D import P3D
 import MDUtilities
 
-
 def parameters():
     parameterfile=open("LJparameters.txt", "r")
     list=P3D.parameterfilereader(parameterfile)

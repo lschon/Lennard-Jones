@@ -14,8 +14,6 @@ def set_initial_positions(N,rho,particles):
     # Set box dimensions
     box_size = (natoms/rho)**(1./3.)
 
-
-
     # Number or particles in each direction
     ndim = int(float((natoms-1)/4.0)**(1./3.))+1
 
