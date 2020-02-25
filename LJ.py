@@ -21,29 +21,48 @@ import matplotlib.pyplot as pyplot
 from Particle3D import P3D
 import MDUtilities
 
-N=4
-particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
-box=MDUtilities.set_initial_positions()
 
-def pbc(box):
-    # Finding the projected position within box of sides l
-    pbc_pos=[]
+
+def parameters():
+    # Open file with parameters
+    parameterfile=open("LJparameters.txt", "r")
+    list=P3D.parameterfilereader(parameterfile)
+    e_k_b=float(list[0])
+    sigma=float(list[1])
+    m=float(list[2])
+    N=float(list[3])
+    temp=float(list[4])
+    rho=float(list[5])
+    epsilon=e_k_b*(1.38064852*10**(-23))
+    print(N)
+    return e_k_b, sigma, m, N, temp, rho, epsilon
+parameters()
+
+def initialiser(N, temp, rho):
+    # Sets particle objects with appropriate positions and randomised velocities
+    print(rho)
+    particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
+    box, particles= MDUtilities.set_initial_positions(rho, particles)
+    MDUtilities.set_initial_velocities(temp, particles)
+    print(particles)
+    return particles, box
+
+initialiser(N, temp, rho)
+
+ # No need for pbc, only mic
+def pbc(N):
+    particles, box, N = initialiser(N, temp, rho)
     for i in range(N):
-        pbc_pos[i].append=np.mod(particles[i].position,box)
-        print(pbc_pos[i])
-    return pbc_pos
-    # Ideally, we would not actually make a pbc_pos list with the new update positions
-    # which result from pbc, but instead update the actual particle object positions,
-    # but I don't know how to do this quite yet... I think that's the way to go though
-pbc(box)
+        particles[i].position=np.mod(particles[i].position,box)
+    return particles # May not even need this return particles according to Miguel
 
-"""def mic(box):
-    # INCOMPLETE, TRYING TO MAKE PBC WORK FIRST BEFORE THIS ONE.
-    # Finding the projected position within box centered on origin
-    mic_pos=[]
-    for i in range(len(particles)):
-        mic_pos[i].append=np.mod(particles_pos[i]+box/2,box)-box/2
-    return mic_pos"""
+def mic(N):
+    particles, box, N = initialiser(N, temp, rho)
+    for i in range(N):
+        particles[i].position=np.mod(particles[i].position+box/2,box)-box/2
+    print(particles.position)
+    return particles
+
 
 def LJforce(rsep_red, r_red):
     """
@@ -72,13 +91,6 @@ def main():
     else:
         outfile_name = sys.argv[1]
 
-    # Open file with parameters
-    parameterfile=open("LJparameters.txt", "r")
-    list=P3D.parameterfilereader(parameterfile)
-    e_k_b=float(list[0])
-    sigma=float(list[1])
-    m=float(list[2])
-    epsilon=e_k_b*(1.38064852*10**(-23))
 
     # Write out initial conditions
     # Need to find separation between N particles including boundary conditions

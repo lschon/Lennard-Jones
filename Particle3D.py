@@ -44,21 +44,6 @@ class P3D(object):
         "param force: current force as float"
         self.position += dt*self.velocity + 0.5*dt**2*force/self.mass
 
-    @staticmethod
-    def filereader(inputfile):
-        """Static method for reading in a text file including coordinates, velocity,
-        mass, and label, and returning a 3D particle by calling the Particle3D function"""
-        line=inputfile.readline()
-        tokens=line.split(",")
-        x=float(tokens[0])
-        y=float(tokens[1])
-        z=float(tokens[2])
-        vx=float(tokens[3])
-        vy=float(tokens[4])
-        vz=float(tokens[5])
-        mass=float(tokens[6])
-        label=(tokens[7])
-        return Particle3D(x,y,z,vx,vy,vz,mass,label)
 
     @staticmethod
     def parameterfilereader(parameterfile):
@@ -67,7 +52,10 @@ class P3D(object):
         e_k_b=float(tokens[0])
         sigma=float(tokens[1])
         m=float(tokens[2])
-        return e_k_b, sigma, m
+        N=float(tokens[3])
+        temp=float(tokens[4])
+        rho=float(tokens[5])
+        return e_k_b, sigma, m, N, temp, rho
 
     @staticmethod
     def separation(p1,p2):

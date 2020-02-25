@@ -6,12 +6,8 @@ import random
 import numpy as np
 from Particle3D import P3D
 
-N=4 #Defining number of particles
-particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
 
-def set_initial_positions():
-
-    rho=1.7848 #THIS SHOULD BE REDUCED DENSITY???
+def set_initial_positions(rho,particles):
 
     # Determine number of particles
     natoms = len(particles)
@@ -55,13 +51,13 @@ def set_initial_positions():
     print(N, "atoms placed on a face-centered cubic lattice.")
     print("Box dimensions: ", box_size, box_size, box_size)
     box=np.array([box_size, box_size, box_size])
-    # Return the box size as Numpy array
-    # NEED TO RETURN THE POSITIONS SOMEHOW TOO??
-    return box
+    # Return the box size as Numpy array and the particle positions
+
+    return box, particles
 
 
-def set_initial_velocities():
-    temp=290
+def set_initial_velocities(temp, particles):
+
     # Determine number of particles
     natoms = len(particles)
 
@@ -121,8 +117,8 @@ def set_initial_velocities():
         v0sq += xvt**2 + yvt**2 + zvt**2
 
     # Output
+    com_vel=[xv0_tot/natoms, yv0_tot/natoms, zv0_tot/natoms]
     print("Temperature = ", temp, "Kelvin")
-    print("Centre-of-mass velocity is: ", xv0_tot/natoms, yv0_tot/natoms, zv0_tot/natoms )
+    print("Centre-of-mass velocity is: ", com_vel)
 
-
-# set_initial_velocities()
+    return particles
