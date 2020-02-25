@@ -6,14 +6,28 @@ import random
 import numpy as np
 from Particle3D import P3D
 
+parameterfile=open("LJparameters.txt", "r")
+list=P3D.parameterfilereader(parameterfile)
+e_k_b=float(list[0])
+sigma=float(list[1])
+m=float(list[2])
+N=int(list[3])
+temp=float(list[4])
+rho=float(list[5])
+epsilon=e_k_b*(1.38064852*10**(-23))
 
-def set_initial_positions(rho,particles):
+
+
+def set_initial_positions(N,rho,particles):
 
     # Determine number of particles
     natoms = len(particles)
 
+    print(rho)
     # Set box dimensions
     box_size = (natoms/rho)**(1./3.)
+
+
 
     # Number or particles in each direction
     ndim = int(float((natoms-1)/4.0)**(1./3.))+1
