@@ -22,36 +22,27 @@ from Particle3D import P3D
 import MDUtilities
 
 
+def parameters():
+    parameterfile=open("LJparameters.txt", "r")
+    list=P3D.parameterfilereader(parameterfile)
+    e_k_b=float(list[0])
+    sigma=float(list[1])
+    m=float(list[2])
+    N=int(list[3])
+    temp=float(list[4])
+    rho=float(list[5])
+    epsilon=e_k_b*(1.38064852*10**(-23))
+    return e_k_b, sigma, m, N, temp, rho, epsilon
 
-
-
-parameterfile=open("LJparameters.txt", "r")
-list=P3D.parameterfilereader(parameterfile)
-e_k_b=float(list[0])
-sigma=float(list[1])
-m=float(list[2])
-N=int(list[3])
-temp=float(list[4])
-rho=float(list[5])
-epsilon=e_k_b*(1.38064852*10**(-23))
-
-
-
-
-
-def initialiser(N, temp, rho):
+def initialiser():
     # Sets particle objects with appropriate positions and randomised velocities
-
+    _, _, _, N, temp, rho, _ = parameters()
     particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
-    box, particles= MDUtilities.set_initial_positions(rho, particles,particles)
+    box, particles= MDUtilities.set_initial_positions(N, rho, particles)
     MDUtilities.set_initial_velocities(temp, particles)
 
     return particles, box
 
-
-initialiser(N, temp, rho)
-
-"""
 
  # No need for pbc, only mic
 def pbc(N):
@@ -67,7 +58,6 @@ def mic(N):
     print(particles.position)
     return particles
 
-"""
 def LJforce(rsep_red, r_red):
     """
     Returns force acting on particle as Numpy array

@@ -6,24 +6,11 @@ import random
 import numpy as np
 from Particle3D import P3D
 
-parameterfile=open("LJparameters.txt", "r")
-list=P3D.parameterfilereader(parameterfile)
-e_k_b=float(list[0])
-sigma=float(list[1])
-m=float(list[2])
-N=int(list[3])
-temp=float(list[4])
-rho=float(list[5])
-epsilon=e_k_b*(1.38064852*10**(-23))
-
-
-
 def set_initial_positions(N,rho,particles):
 
     # Determine number of particles
     natoms = len(particles)
 
-    print(rho)
     # Set box dimensions
     box_size = (natoms/rho)**(1./3.)
 
@@ -96,8 +83,6 @@ def set_initial_velocities(temp, particles):
         zv0 += zvt
         vsq += xvt**2 + yvt**2 + zvt**2
 
-        print(xvt,yvt,zvt)
-
     # Centre-of-mass motion
     xv0 /= natoms
     yv0 /= natoms
@@ -105,7 +90,6 @@ def set_initial_velocities(temp, particles):
 
     # Boltzmann factor
     kB = (3*natoms*temp/vsq)**(1./2.)
-    print("kB is: ", kB)
     # Zero the probe accumulators
     xv0_tot = 0.0
     yv0_tot = 0.0
@@ -115,13 +99,9 @@ def set_initial_velocities(temp, particles):
     # Rescale all velocities
     for i in range(natoms):
         vtemp = particles[i].velocity
-        print("vtemp is: ", vtemp)
         xvt = kB*(vtemp[0] - xv0)
         yvt = kB*(vtemp[1] - yv0)
         zvt = kB*(vtemp[2] - zv0)
-    # Note to self: After this step, the component velocities of the particles add up to zero every time
-    # this does not make sense
-        print(xvt,yvt,zvt)
 
         particles[i].velocity = np.array([xvt, yvt, zvt])
 
