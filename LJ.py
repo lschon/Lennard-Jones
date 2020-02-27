@@ -39,8 +39,9 @@ def initialiser():
     particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
     box, particles= MDUtilities.set_initial_positions(N, rho, particles)
     MDUtilities.set_initial_velocities(temp, particles)
+    return particles, box
 
-    return particles, box, N
+
 
  # No need for pbc, only mic
 def pbc():
@@ -60,21 +61,45 @@ def LJforce(rsep_red, r_red):
     """
     Returns force acting on particle as Numpy array
     """
-    force=48*(1/r_red**(14)-1/(2*r_red**8))*rsep_red
-
+    if rmag < 2.5:
+        force=48*(1/rmag_red**(14)-1/(2*rmag_red**8))*(rsep_red)
+    else:
+        force = 0
     return force
 
 def LJpot(r_red):
     """
     Returns potential energy of particle as float
     """
+    if rmag < 2.5:
+        pot=4*(1/rmag_red**(12)-1/rmag_red**6)
+    else:
+        pot = 0
+        return pot
 
-    pot=4*(1/r_red**(12)-1/r_red**6)
+"""
+Some rough work
 
-    return pot
+"""
+
+_, _, _, N, temp, rho, _ = parameters()
+particles, box =initialiser()
+
+print(N)
+#determine seperation between particles
+for j in range(N):
+
+    for i in range(N-1):
+         if (i != j):
+
+            r_sep = P3D.separation(particles[j],particles[i])
+            print(r_sep)
+
+
 
 # Begin main code
-def main():
+def simulation():
+    """
     # Read name of output file from command line
     if len(sys.argv)!=2:
         print("Wrong number of arguments.")
@@ -83,16 +108,23 @@ def main():
     else:
         outfile_name = sys.argv[1]
 
+    _, _, _, N, temp, rho, _ = parameters()
 
-    # Write out initial conditions
-    # Need to find separation between N particles including boundary conditions
-    # From this point onwards, we need to change a 2 particle system to an N particle system
-    rsep=P3D.separation(p1,p2)
-    r = np.linalg.norm(rsep)
+    #Intialise Particle Seperations
+
+    for i in range (N):
+        rsep=P3D.separation(particle1,particle2)
+        rmag = np.linalg.norm(rsep)
+    print(rsep)
+    print(rmag)
+
+
+    Simulation()
+
 
     # Define reduced units
-    r_red=r/sigma
     rsep_red=rsep/sigma
+    rmag_red=rmag/sigma
     E_red=E/epsilon
     T_red=e_k_b
     t_red=sigma*sqrt(m/epsilon)
@@ -169,4 +201,5 @@ def main():
 
 # Execute main method, but only when directly invoked
 if __name__ == "__main__":
-    main()
+    simulation()
+"""
