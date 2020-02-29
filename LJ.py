@@ -39,6 +39,7 @@ def initialiser():
     particles=[P3D(0, 0, 0, 0, 0, 0, 1, "particle" + str(i)) for i in range(N)]
     box, particles= MDUtilities.set_initial_positions(N, rho, particles)
     MDUtilities.set_initial_velocities(temp, particles)
+
     return particles, box
 
 
@@ -57,21 +58,22 @@ def mic():
     print(particles.position)
     return particles
 
-def LJforce(rsep_red, r_red):
+def LJforce(rsep, rmag):
     """
     Returns force acting on particle as Numpy array
     """
-    if rmag < 2.5:
-        force=48*(1/rmag_red**(14)-1/(2*rmag_red**8))*(rsep_red)
+    if rmag < 2.5 :
+        force= 48*((1/rmag**14)-(1/(2*rmag**8)))*rsep
     else:
         force = 0
+
     return force
 
 def LJpot(r_red):
     """
     Returns potential energy of particle as float
     """
-    if rmag < 2.5:
+    if rmag_red < 2.5:
         pot=4*(1/rmag_red**(12)-1/rmag_red**6)
     else:
         pot = 0
@@ -82,24 +84,62 @@ Some rough work
 
 """
 
-_, _, _, N, temp, rho, _ = parameters()
+e_k_b, sigma, m, N, temp, rho, epsilon = parameters()
 particles, box =initialiser()
 
-print(N)
-#determine seperation between particles
+#Quite possibly works -- marvel at my genius
+#note that what prints is the force acting on each particle ie should get N forces
+
 for j in range(N):
-
+    force_list = []
+    sep_list = []
     for i in range(N-1):
-         if (i != j):
+        if (i != j):
+            rsep = (P3D.separation(particles[j],particles[i]))
+            rmag = np.linalg.norm(rsep)
+            force = LJforce(rsep,rmag)
+            force_list.append(force)
+    total_force = sum(force_list)
+    print(total_force)
 
-            r_sep = P3D.separation(particles[j],particles[i])
-            print(r_sep)
+#verlet integrator
+#we have a list of particle seperations sep_list
+#we have a the forces acting on each particle total_force
+dt = 0.01
+for i in range(timestep):
+    for k in range (N):
+
+        # Update particle position
+        particles[k].leap_pos_2nd(dt, force)
+
+        # Update force
+        force_new = LJforce(rsep, rmag)
+
+        # Update particle velocity by averaging current and new forces
+        particles[k].leap_velocity(dt, 0.5*(force+force_new))
 
 
+        # Re-define separation ater change in position
+        r_red = P3D.separation(p1,p2)
+
+        # Re-define force value
+        force = force_new
+
+        # Increase time
+        time += dt
+
+
+
+
+
+
+
+"""
+"""
 
 # Begin main code
 def simulation():
-    """
+
     # Read name of output file from command line
     if len(sys.argv)!=2:
         print("Wrong number of arguments.")
@@ -119,7 +159,7 @@ def simulation():
     print(rmag)
 
 
-    Simulation()
+
 
 
     # Define reduced units
@@ -198,8 +238,3 @@ def simulation():
     pyplot.plot(time_list, energy_list, label="particle energy")
     pyplot.legend(loc="upper left")
     pyplot.show()
-
-# Execute main method, but only when directly invoked
-if __name__ == "__main__":
-    simulation()
-"""
