@@ -77,6 +77,7 @@ def LJpot(r_red):
         pot = 0
     return pot
 
+"""
 def MSD():
     MSD=[]
     for i in range(N):
@@ -96,8 +97,8 @@ def pot_tot():
 
 def KE_tot():
 
-    return
-
+    return x
+"""
 
 """
 Some rough work
@@ -121,7 +122,8 @@ def totalforce():
                 force_list.append(force)
         total_force = sum(force_list)
         print(total_force)
-
+        return total_force, sep_list
+totalforce()
 #verlet integrator
 #we have a list of particle seperations sep_list
 #we have the forces acting on each particle total_force
@@ -130,17 +132,17 @@ def timeintegrator():
     time = 0.0
     while time<1:
         for k in range (N):
+
+            force, _ =totalforce()
+
             # Update particle position
             particles[k].leap_pos_2nd(dt, force)
 
             # Update force
-            force_new = LJforce(rsep, rmag)
+            force_new, _ = totalforce()
 
             # Update particle velocity by averaging current and new forces
             particles[k].leap_velocity(dt, 0.5*(force+force_new))
-
-            # Re-define separation after change in position
-            r_red = P3D.separation(p1,p2)
 
             # Re-define force value
             force = force_new
@@ -149,6 +151,7 @@ def timeintegrator():
             time += dt
 
     return particles
+timeintegrator()
 
 # Begin main code
 def simulation():
